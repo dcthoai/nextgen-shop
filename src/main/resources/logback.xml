@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<configuration scan="true">
+    <!-- Patterns based on https://github.com/spring-projects/spring-boot/blob/v2.7.2/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback/defaults.xml -->
+    <!-- Defines the keyword "crlf" that can be used in log patterns.-->
+    <!-- Bind the "crlf" keyword to the CRLFLogConverter class, which handles the removal of unsafe characters like \n, \r, and \t -->
+    <conversionRule conversionWord="crlf" converterClass="com.dct.base.config.CRLFLogConverter" />
+
+    <!-- Define log pattern for log console -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%5.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %crlf(%m){red} %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <!-- Define log pattern for log file -->
+    <property name="FILE_LOG_PATTERN"
+              value="${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %crlf(%m) %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <!-- Includes default configurations from Spring Boot, which usually define basic appender and formats. -->
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- The FILE and ASYNC appender are here as examples for a production configuration -->
+    <!-- Logging to file with rolling mechanism, creating new log every day -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>mnt/logs/%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory> <!-- Stores maximum logs of the last 10 days -->
+        </rollingPolicy>
+        <encoder>
+            <charset>utf-8</charset>
+            <Pattern>%d %-5level [%thread] %logger{0}: %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- Async logging for improved performance -->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>512</queueSize>
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <!-- Appender for unsafe log. Dedicated to connection pool leak monitoring log -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>mnt/logs/connection_pool_leak.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.zaxxer.hikari.pool.PoolBase" level="debug" additivity="false">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- Set log levels for specific loggers, for example WARN for Hibernate to reduce unnecessary logging -->
+    <logger name="javax.activation" level="WARN"/>
+    <logger name="javax.mail" level="WARN"/>
+    <logger name="javax.management.remote" level="WARN"/>
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="com.sun" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.hibernate.validator" level="WARN"/>
+    <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.cache" level="WARN"/>
+    <logger name="org.thymeleaf" level="WARN"/>
+    <logger name="jdk.event.security" level="WARN"/>
+    <logger name="sun.rmi" level="WARN"/>
+    <logger name="sun.rmi.transport" level="WARN"/>
+    <logger name="_org.springframework.web.servlet.HandlerMapping.Mappings" level="ERROR"/>
+
+    <!-- Register a hook to ensure Logback is safely shut down when the application stops -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+    <!-- Synchronize log levels from Logback to java.util.logging (JUL) -->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+</configuration>
