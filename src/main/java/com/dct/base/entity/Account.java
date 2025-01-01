@@ -4,13 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import org.hibernate.envers.Audited;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
-@Audited
+@DynamicUpdate // Hibernate only updates the changed columns to the database instead of updating the entire table
 @Table(name = "account")
 public class Account extends AbstractAuditingEntity implements Serializable {
 

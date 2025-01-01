@@ -1,24 +1,19 @@
-
 package com.dct.base.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-
-import org.hibernate.envers.Audited;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
+@DynamicUpdate // Hibernate only updates the changed columns to the database instead of updating the entire table
 @MappedSuperclass
-@Audited
-@EntityListeners(AuditingEntityListener.class)
 @SuppressWarnings("unused")
 public abstract class AbstractAuditingEntity implements Serializable {
 
@@ -31,7 +26,7 @@ public abstract class AbstractAuditingEntity implements Serializable {
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
-    private Instant createdDate = Instant.now();
+    private final Instant createdDate = Instant.now();
 
     @LastModifiedBy
     @Column(name = "last_modified_by", length = 45)
@@ -40,6 +35,18 @@ public abstract class AbstractAuditingEntity implements Serializable {
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private Instant lastModifiedDate = Instant.now();
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
 
     public String getLastModifiedBy() {
         return lastModifiedBy;

@@ -1,6 +1,5 @@
 package com.dct.base.security.jwt;
 
-import ch.qos.logback.core.util.StringUtil;
 import com.dct.base.constants.AuthConstants;
 import com.dct.base.dto.BaseAuthTokenDTO;
 
@@ -17,12 +16,14 @@ import io.jsonwebtoken.security.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.util.Arrays;
@@ -37,22 +38,21 @@ public class JwtTokenProvider {
     private final SecretKey secretKey;
     private final JwtParser jwtParser;
 
-    @Value("${security.authentication.jwt.base64-secret}")
-    private String JWT_SECRET_KEY;
-
     @Value("${security.authentication.jwt.token-validity-in-milliseconds}")
     private long TOKEN_EXPIRED_AFTER;
 
     @Value("${security.authentication.jwt.token-validity-in-milliseconds-for-remember-me}")
     private long TOKEN_FOR_REMEMBER_ME_EXPIRED_AFTER;
 
-    public JwtTokenProvider() {
-        if (StringUtil.isNullOrEmpty(JWT_SECRET_KEY)) {
-            throw new RuntimeException("Not found secret key for signing JWT token");
+    public JwtTokenProvider(Environment env) {
+        String jwtSecretKey = env.getProperty("security.authentication.jwt.base64-secret");
+
+        if (!StringUtils.hasText(jwtSecretKey)) {
+            throw new RuntimeException("Secret key not found to sign JWT");
         }
 
         log.debug("Using a Base64-encoded JWT secret key");
-        byte[] keyBytes = Decoders.BASE64.decode(JWT_SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
         secretKey = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parser().verifyWith(secretKey).build();
         log.debug("Encoded secret key with algorithm: {}", secretKey.getAlgorithm());
@@ -103,7 +103,7 @@ public class JwtTokenProvider {
 
         Collection<? extends GrantedAuthority> authorities = Arrays
                 .stream(String.valueOf(claims.get(AuthConstants.AUTHORITIES_KEY)).split(","))
-                .filter(auth -> StringUtil.notNullNorEmpty(auth.trim()))
+                .filter(auth -> StringUtils.hasText(auth.trim()))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 

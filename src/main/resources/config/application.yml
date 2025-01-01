@@ -5,6 +5,9 @@ spring:
     active: dev
   messages:
     basename: i18n/messages # Base path for resource files containing internationalized (i18n) messages
+  jpa:
+    # Avoid causing LazyInitializationException if querying outside the scope of EntityManager or causing poor performance
+    open-in-view: false
 
 server:
   servlet:

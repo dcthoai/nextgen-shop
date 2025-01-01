@@ -1,6 +1,5 @@
 package com.dct.base.interceptor;
 
-import ch.qos.logback.core.util.StringUtil;
 import com.dct.base.common.BaseCommon;
 import com.dct.base.constants.BaseConstants;
 import com.dct.base.dto.response.BaseResponseDTO;
@@ -14,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -75,13 +75,13 @@ public class BaseResponseFilter implements ResponseBodyAdvice<Object> {
     private BaseResponseDTO setMessageI18nForResponse(BaseResponseDTO responseDTO) {
         String messageKey = responseDTO.getMessage();
 
-        if (StringUtil.notNullNorEmpty(messageKey)) {
+        if (StringUtils.hasText(messageKey)) {
             String messageTranslated = baseCommon.getMessageI18n(messageKey);
 
-            if (StringUtil.isNullOrEmpty(messageTranslated))
-                responseDTO.setMessage(BaseConstants.TRANSLATE_NOT_FOUND);
-            else
+            if (StringUtils.hasText(messageTranslated))
                 responseDTO.setMessage(messageTranslated);
+            else
+                responseDTO.setMessage(BaseConstants.TRANSLATE_NOT_FOUND);
         }
 
         return responseDTO;

@@ -12,6 +12,6 @@ public interface AuthConstants {
     String HEADER_PERMISSIONS_POLICY = "camera=(), fullscreen=(self), geolocation=(), " +
             "gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), sync-xhr=()";
 
-    String ROLE_ADMIN = "ROLE_ADMIN";
-    String ROLE_USER = "ROLE_USER";
+    String ROLE_ADMIN = "ADMIN";
+    String ROLE_USER = "USER";
 }
