@@ -1,6 +1,5 @@
 package com.dct.base.security.jwt;
 
-import ch.qos.logback.core.util.StringUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -42,7 +41,7 @@ public class JwtTokenFilter extends GenericFilterBean {
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
 
-        if (StringUtil.isNullOrEmpty(bearerToken)) {
+        if (!StringUtils.hasText(bearerToken)) {
             bearerToken = request.getHeader("Authorization-Gateway");
         }
 

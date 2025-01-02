@@ -2,24 +2,13 @@ package com.dct.base.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import org.hibernate.envers.Audited;
-
-import java.io.Serial;
-import java.io.Serializable;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
-@Audited
+@DynamicUpdate // Hibernate only updates the changed columns to the database instead of updating the entire table
 @Table(name = "account")
-public class Account extends AbstractAuditingEntity implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @Column(name = "ID")
-    private Integer id;
+public class Account extends AbstractAuditingEntity {
 
     @Column(name = "username", length = 45, nullable = false)
     private String username;
@@ -32,14 +21,6 @@ public class Account extends AbstractAuditingEntity implements Serializable {
     public Account(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getUsername() {

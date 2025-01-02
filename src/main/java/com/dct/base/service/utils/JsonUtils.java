@@ -1,6 +1,5 @@
 package com.dct.base.service.utils;
 
-import ch.qos.logback.core.util.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -10,10 +9,10 @@ import com.google.gson.reflect.TypeToken;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.io.FileReader;
 import java.io.FileWriter;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 
@@ -115,16 +114,14 @@ public class JsonUtils {
      * @return Parsed object of type T or null on error
      */
     private static <T> T parse(String jsonString, Object typeOrClass) {
-        if (StringUtil.isNullOrEmpty(jsonString)) {
-            return null;
-        }
-
-        try {
-            return gson.fromJson(jsonString, (Type) typeOrClass);
-        } catch (JsonSyntaxException e) {
-            log.error("Invalid JSON format. {}", e.getMessage());
-        } catch (JsonIOException e) {
-            log.error("Cannot parse JSON string. {}", e.getMessage());
+        if (StringUtils.hasText(jsonString)) {
+            try {
+                return gson.fromJson(jsonString, (Type) typeOrClass);
+            } catch (JsonSyntaxException e) {
+                log.error("Invalid JSON format. {}", e.getMessage());
+            } catch (JsonIOException e) {
+                log.error("Cannot parse JSON string. {}", e.getMessage());
+            }
         }
 
         return null;

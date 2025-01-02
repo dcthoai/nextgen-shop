@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-public class UserDetailsServiceCustom implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceCustom.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
     private final AccountRepository accountRepository;
 
-    public UserDetailsServiceCustom(AccountRepository accountRepository) {
+    public CustomUserDetailsService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
