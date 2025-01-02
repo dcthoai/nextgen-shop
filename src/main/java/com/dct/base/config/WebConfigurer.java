@@ -23,6 +23,10 @@ import java.util.Objects;
 
 import static java.net.URLDecoder.decode;
 
+/**
+ * Configuration of web application with Servlet 3.0 APIs
+ * @author thoaidc
+ */
 @Configuration
 public class WebConfigurer implements WebMvcConfigurer, ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
 

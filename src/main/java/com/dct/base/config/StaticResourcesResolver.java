@@ -5,6 +5,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistra
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Static resource handling configurations in applications
+ * @author thoaidc
+ */
 @Configuration
 public class StaticResourcesResolver implements WebMvcConfigurer {
 
@@ -25,10 +29,10 @@ public class StaticResourcesResolver implements WebMvcConfigurer {
     };
 
     /**
-     * The {@link StaticResourcesResolver} class configures Spring MVC to serve static resources
-     * from directories on the classpath (e.g. static, content, i18n). <p>
-     * The static resource paths defined in <a href="">RESOURCE_PATHS</a> will be mapped to the directories
-     * listed in <a href="">RESOURCE_LOCATIONS</a><p>
+     * The {@link StaticResourcesResolver} configures Spring to serve static resources
+     * from directories on the classpath (e.g. static, content, i18n)<p>
+     * The static resource paths defined in <a href="">RESOURCE_PATHS</a>
+     * will be mapped to the directories listed in <a href="">RESOURCE_LOCATIONS</a><p>
      * When a request comes in for static resources such as .js, .css, .svg, etc.,
      * Spring will look for the files in the configured directories and return the corresponding content.
      */

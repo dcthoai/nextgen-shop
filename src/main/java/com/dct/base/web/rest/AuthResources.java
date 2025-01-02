@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/auth")
-public class AuthenticationResources {
+public class AuthResources {
 
     @PostMapping("/login")
     public BaseResponseDTO login(@RequestBody BaseRequestDTO loginRequest) {
