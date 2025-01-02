@@ -1,3 +1,14 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+# This configuration overrides the application.yml file.
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# https://docs.spring.io/spring-boot/reference/features/profiles.html
+# ===================================================================
+
 logging:
   level:
     ROOT: DEBUG
@@ -13,7 +24,7 @@ spring:
     password: 123456a@
     hikari:
       poolName: Hikari
-      auto-commit: false
+      auto-commit: false # Do not automatically commit transactions
       data-source-properties:
         cachePrepStmts: true # Enable caching to improve performance when using multiple identical statements
         prepStmtCacheSize: 250 # Prepared statement cache size. In this case, the cache can hold up to 250 statements
@@ -27,6 +38,11 @@ spring:
       leak-detection-threshold: 200000 # Leak detection time of a connection pool (200 seconds)
   jpa:
     show-sql: true
+    hibernate:
+      # Hibernate only checks if the current schema matches the entity
+      # If it does not match, the application will not start
+      # Do not make any changes to the schema
+      ddl-auto: validate
   thymeleaf:
     cache: false
   servlet:

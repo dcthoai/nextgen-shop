@@ -11,7 +11,7 @@ public class BaseResponseDTO {
     private Object result;
 
     public BaseResponseDTO() {
-        this.code = HttpStatusConstants.SUCCESS;
+        this.code = HttpStatusConstants.OK;
         this.status = HttpStatusConstants.STATUS.SUCCESS;
     }
 

@@ -14,6 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Used in the logging system (Logback) to ensure that log messages do not contain newline characters
+ * (CR - Carriage Return and LF - Line Feed)
+ * or other unsafe characters that may cause security problems
+ * or affect the log format
+ * @author thoaidc
+ */
 public class CRLFLogConverter extends CompositeConverter<ILoggingEvent> {
 
     public static final Marker CRLF_SAFE_MARKER = MarkerFactory.getMarker("CRLF_SAFE");
@@ -21,6 +28,7 @@ public class CRLFLogConverter extends CompositeConverter<ILoggingEvent> {
     private static final Map<String, AnsiElement> ELEMENTS;
 
     static {
+        // A map that maps color options (like "red", "green") to ANSI objects to apply color to the log string
         Map<String, AnsiElement> ansiElements = new HashMap<>();
         ansiElements.put("faint", AnsiStyle.FAINT);
         ansiElements.put("red", AnsiColor.RED);
@@ -37,10 +45,12 @@ public class CRLFLogConverter extends CompositeConverter<ILoggingEvent> {
         AnsiElement element = ELEMENTS.get(getFirstOption());
         List<Marker> markers = event.getMarkerList();
 
+        // If the logger is safe (in SAFE_LOGGERS list) or has the marker CRLF_SAFE_MARKER, keep original log string
         if ((Objects.nonNull(markers) && markers.get(0).contains(CRLF_SAFE_MARKER)) || isLoggerSafe(event)) {
             return in;
         }
 
+        // The characters \n, \r, and \t are replaced with the _ character or an ANSI string if a color is configured
         String replacement = element == null ? "_" : AnsiOutput.toString(element, "_");
         return in.replaceAll("[\n\r\t]", replacement);
     }
