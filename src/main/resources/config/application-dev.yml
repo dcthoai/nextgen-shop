@@ -11,10 +11,11 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    com.dct.base: DEBUG
+    com.dct.base: debug
+    root: debug
   charset:
-    console: utf-8
+    console: UTF-8
+    file: UTF-8
 
 spring:
   datasource:

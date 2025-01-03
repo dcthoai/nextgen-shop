@@ -10,16 +10,16 @@
 # ===================================================================
 
 logging:
+  level:
+    org.hibernate.sql: info
+    com.dct.base: info
+    root: info
   file:
     path: /mnt/logs
     name: ${logging.file.path}/clusterLogData.log
-  level:
-    ROOT: INFO
-    org.hibernate.SQL: INFO
-    com.dct.base: INFO
   charset:
-    console: utf-8
-    file: utf-8
+    console: UTF-8
+    file: UTF-8
 
 spring:
   datasource:

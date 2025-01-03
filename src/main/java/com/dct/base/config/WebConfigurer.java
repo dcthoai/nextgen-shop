@@ -1,5 +1,6 @@
 package com.dct.base.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,8 @@ import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerF
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -126,5 +129,19 @@ public class WebConfigurer implements WebMvcConfigurer, ServletContextInitialize
         source.registerCorsConfiguration("/**", config); // Apply CORS to all endpoints
 
         return new CorsFilter(source);
+    }
+
+    /**
+     * This configuration defines a RestTemplate bean in Spring, which is used to make HTTP requests <p>
+     * Purpose: Create an instance of RestTemplate, a tool that makes sending HTTP requests and handling responses
+     */
+    @Bean
+    public RestTemplate restTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        // Create an HTTP message converter, using Jackson to convert between JSON and Java objects
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setObjectMapper(new ObjectMapper());
+        restTemplate.getMessageConverters().add(converter);
+        return restTemplate;
     }
 }
